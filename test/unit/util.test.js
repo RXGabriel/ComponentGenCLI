@@ -13,5 +13,13 @@ describe('#Util - Strings', () => {
         const result = Util.upperCaseFirstLetter(data)
 
         expect(result).toStrictEqual(expected)
-    });
+    })
+
+    test('#lowerCaseFirstLetter - should transform the first letter in lowerCase.', () => {
+        const data = 'Hello'
+        const expected = 'hello'
+        const result = Util.lowerCaseFirstLetter(data)
+
+        expect(result).toStrictEqual(expected)
+    })
 })
