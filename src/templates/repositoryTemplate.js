@@ -1,5 +1,9 @@
+import Util from '../util.js'
+
+const componentNameAnchor = '$$componentName'
+
 const template = `
-export default class RepositoryTemplate {
+export default class $$componentNameRepository {
     constructor() { }
     create(data) {
         return Promise.reject("method not implemented!")
@@ -17,5 +21,8 @@ export default class RepositoryTemplate {
 }`
 
 export function repositoryTemplate(componentName) {
-
+  return {
+    fileName: `${componentName}Repository`,
+    template: template.replaceAll(componentNameAnchor, Util.upperCaseFirstLetter(componentName))
+  }
 }
