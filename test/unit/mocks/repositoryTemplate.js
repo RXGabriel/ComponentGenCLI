@@ -1,5 +1,5 @@
 export default `
-export default class ProductRepositoryTemplate {
+export default class ProductRepository {
     constructor() { }
     create(data) {
         return Promise.reject("method not implemented!")
