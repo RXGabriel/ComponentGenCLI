@@ -31,4 +31,11 @@ describe('#Util - Strings', () => {
         expect(result).toStrictEqual(expected)
     })
 
+    test('#lowerCaseFirstLetter given an empty string should return empty', () => {
+        const data = ''
+        const expected = ''
+        const result = Util.lowerCaseFirstLetter(data)
+
+        expect(result).toStrictEqual(expected)
+    })
 })
