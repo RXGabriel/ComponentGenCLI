@@ -1,13 +1,14 @@
 import { expect, describe, test, jest, beforeEach } from '@jest/globals'
 import templates from './../../src/templates/index.js'
-import { repositoryTemplateMock, serviceTemplateMock } from './mocks/index.js'
+import { repositoryTemplateMock, serviceTemplateMock, factoryTemplateMock } from './mocks/index.js'
 
-const { repositoryTemplate, serviceTemplate } = templates
+const { repositoryTemplate, serviceTemplate, factoryTemplate } = templates
 
 describe('#Codegen 3-layers architecture', () => {
     const componentName = 'product'
     const repositoryName = `${componentName}Repository`
     const serviceName = `${componentName}Service`
+    const factoryName = `${componentName}Factory`
 
     beforeEach(() => {
         jest.restoreAllMocks()
@@ -30,6 +31,16 @@ describe('#Codegen 3-layers architecture', () => {
         }
         const result = serviceTemplate(componentName, repositoryName)
 
+        expect(result).toStrictEqual(expected)
+    })
+
+    test('should generate factory template', () => {
+        const expected = {
+            fileName: factoryName,
+            template: factoryTemplateMock
+        }
+
+        const result = factoryTemplate(componentName, repositoryName, serviceName)
         expect(result).toStrictEqual(expected)
     })
 })
