@@ -1,3 +1,8 @@
+import Util from "../util.js"
+const componentNameAnchor = "$$componentName"
+const currentContextAnchor = '$$currentContext'
+const repositoryAnchor = "$$repositoryName"
+
 const template = `
 export default class $$componentNameService {
   constructor({ repository: $$repositoryName }) {
@@ -21,9 +26,14 @@ export default class $$componentNameService {
   }
 }`
 
-export function serviceTemplate(componentName) {
-    return {
-        fileName: `${componentName}Service`,
-        template
-    }
+export function serviceTemplate(componentName, repositoryName) {
+  const currentContext = `this.${repositoryName}`
+  const txtFile = template
+    .replaceAll(componentNameAnchor, Util.upperCaseFirstLetter(componentName))
+    .replaceAll(currentContextAnchor, currentContext)
+    .replaceAll(repositoryAnchor, repositoryName)
+  return {
+    fileName: `${componentName}Service`,
+    template: txtFile
+  }
 }
