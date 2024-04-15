@@ -54,4 +54,20 @@ describe('#Layers - Files Structure', () => {
         expect(fsPromises.writeFile).toHaveBeenCalledTimes(myConfig.layers.length)
         expect(templates.serviceTemplate).toHaveBeenCalledWith(myConfig.componentName, repositoryLayer)
     })
+
+    test('#factory should have repository and service as dependencies', async () => {
+        jest.spyOn(fsPromises, fs.writeFile.name).mockResolvedValue()
+        jest.spyOn(templates, templates.factoryTemplate.name).mockReturnValue({ fileName: '', template: '' })
+
+        const myConfig = {
+            ...config,
+            layers: ['repository', 'service', 'factory']
+        }
+        const expected = { success: true }
+        const result = await createFiles(myConfig)
+
+        expect(result).toStrictEqual(expected)
+        expect(fsPromises.writeFile).toHaveBeenCalledTimes(myConfig.layers.length)
+        expect(templates.factoryTemplate).toHaveBeenCalledWith(myConfig.componentName, repositoryLayer, serviceLayer)
+    })
 })
