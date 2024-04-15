@@ -20,4 +20,20 @@ describe('#Layers - Files Structure', () => {
         const result = await createFiles(myConfig)
         expect(result).toStrictEqual(expected)
     })
+
+    test('#repository should not add any additional dependencies', async () => {
+        jest.spyOn(fsPromises, fs.writeFile.name).mockResolvedValue()
+        jest.spyOn(templates, templates.repositoryTemplate.name).mockReturnValue({ fileName: '', template: '' })
+
+        const myConfig = {
+            ...config,
+            layers: ['repository']
+        }
+        const expected = { success: true }
+        const result = await createFiles(myConfig)
+
+        expect(result).toStrictEqual(expected)
+        expect(fsPromises.writeFile).toHaveBeenCalledTimes(myConfig.layers.length)
+        expect(templates.repositoryTemplate).toHaveBeenCalledWith(myConfig.componentName)
+    })
 })
