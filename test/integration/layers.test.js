@@ -37,5 +37,12 @@ describe('#Integration - Layers - Folders Structure', () => {
         expect(afterRun).toEqual(config.layers)
     })
 
+    test('should create folders if it doesn\'t exists.', async () => {
+        const beforeRun = await getFolders(config)
+        await createLayersIfNotExists(config)
+        const afterRun = await getFolders(config)
 
+        expect(beforeRun).not.toStrictEqual(config)
+        expect(afterRun).toEqual(beforeRun)
+    })
 })
