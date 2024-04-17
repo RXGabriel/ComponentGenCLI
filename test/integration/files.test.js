@@ -82,4 +82,21 @@ describe('#Integration - Files - Files Structure', () => {
         allRepositoryMethods
             .forEach(method => expect(repositoryInstance[method]).toHaveBeenCalled())
     })
+
+    test('Factory instance should match layers', async () => {
+        const myConfig = {
+            ...config
+        }
+
+        await createFiles(myConfig)
+        const [factoryFile, repositoryFile, serviceFile] = generateFilePath(myConfig)
+        const { default: Repository } = await import(repositoryFile)
+        const { default: Service } = await import(serviceFile)
+        const { default: Factory } = await import(factoryFile)
+        const expectedServiceInstance = new Service({ repository: new Repository() })
+        const factoryInstance = Factory.getInstance()
+
+        expect(factoryInstance).toMatchObject(expectedServiceInstance)
+        expect(factoryInstance).toBeInstanceOf(Service)
+    })
 })
