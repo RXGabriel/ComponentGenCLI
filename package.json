@@ -4,7 +4,11 @@
   "description": "",
   "main": "index.js",
   "type": "module",
+  "bin": {
+    "codegen": "./src/index.js"
+  },
   "scripts": {
+    "start": "set NODE_ENV=dev node src/index.js skeleton -c product -c person -c colors",
     "test": "set NODE_OPTIONS=--experimental-vm-modules && npx jest --runInBand --no-cache --watch --config jest.config.mjs",
     "cov": "set NODE_OPTIONS=--experimental-vm-modules && npx jest --config jest.config.mjs --coverage"
   },
@@ -13,5 +17,8 @@
   "license": "ISC",
   "devDependencies": {
     "jest": "^29.7.0"
+  },
+  "dependencies": {
+    "yargs": "^17.7.2"
   }
 }
