@@ -13,6 +13,12 @@ function generateFilePath({ mainPath, defaultMainFolder, layers, componentName }
     })
 }
 
+function getAllFunctionsFromInstance(instance) {
+    return Reflect
+        .ownKeys(Reflect.getPrototypeOf(instance))
+        .filter(method => method !== 'constructor')
+}
+
 describe('#Integration - Files - Files Structure', () => {
     const config = {
         defaultMainFolder: 'src',
@@ -52,5 +58,28 @@ describe('#Integration - Files - Files Structure', () => {
         await expectNotImplemented(repositoryInstance.read)
         await expectNotImplemented(repositoryInstance.update)
         await expectNotImplemented(repositoryInstance.delete)
+    })
+
+    test('Service should have the same signature of repository and call all its methods', async () => {
+        const myConfig = {
+            ...config,
+            layers: ['repository', 'service']
+        }
+
+        await createFiles(myConfig)
+        const [repositoryFile, serviceFile] = generateFilePath(myConfig)
+        const { default: Repository } = await import(repositoryFile)
+        const { default: Service } = await import(serviceFile)
+        const repositoryInstance = new Repository()
+        const serviceInstance = new Service({ repository: repositoryInstance })
+        const allRepositoryMethods = getAllFunctionsFromInstance(repositoryInstance)
+        allRepositoryMethods
+            .forEach(method => jest.spyOn(repositoryInstance, method).mockReturnValue())
+
+        getAllFunctionsFromInstance(serviceInstance)
+            .forEach(method => serviceInstance[method].call(serviceInstance, []))
+
+        allRepositoryMethods
+            .forEach(method => expect(repositoryInstance[method]).toHaveBeenCalled())
     })
 })
